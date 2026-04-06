@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ikwe.ai — Competitive Analysis Pitch</title>
+  <meta name="slides-format" content="viewport" />
+  <title>Ikwe.ai — Behavioral Safety Infrastructure</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -12,7 +13,7 @@
     @theme {
       --color-bg: #080c18;
       --color-bg-deep: #030611;
-      --color-surface: #111827;
+      --color-surface: #0f1628;
       --color-text: #f0f4ff;
       --color-text-secondary: #a8b4cc;
       --color-text-muted: #5a6a87;
@@ -29,34 +30,13 @@
   <style>
     :root { --color-bg: #080c18; --color-text: #f0f4ff; --glow-color-rgb: 126,232,250; }
     *, *::before, *::after { box-sizing: border-box; }
-    html, body { background: var(--color-bg); margin: 0; font-family: 'Inter', sans-serif; color: var(--color-text); min-height: 100vh; }
-    #lock-screen { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg); }
-    #lock-screen .mesh { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-    @keyframes float-slow { 0% { transform: translate(0,0) scale(1); } 25% { transform: translate(60px,-50px) scale(1.1); } 50% { transform: translate(-40px,40px) scale(0.9); } 75% { transform: translate(50px,20px) scale(1.07); } 100% { transform: translate(0,0) scale(1); } }
-    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-    .lock-card { position: relative; z-index: 2; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); backdrop-filter: blur(20px); border-radius: 20px; padding: 3rem 3.5rem; text-align: center; max-width: 420px; width: 90%; box-shadow: 0 25px 60px rgba(0,0,0,0.4); }
-    .lock-logo { font-family: 'Instrument Serif', serif; font-size: 2.8rem; font-style: italic; background: linear-gradient(135deg, #7ee8fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.25rem; animation: float 3.5s ease-in-out infinite; display: inline-block; }
-    .lock-sub { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 2rem; }
-    .lock-label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.5rem; text-align: left; }
-    #pw-input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #f0f4ff; font-family: 'Inter', sans-serif; font-size: 1rem; outline: none; transition: border-color 0.2s; letter-spacing: 0.15em; }
-    #pw-input:focus { border-color: rgba(126,232,250,0.4); }
-    #pw-input.shake { animation: shake 0.4s ease; border-color: rgba(251,113,133,0.6); }
-    @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-8px); } 40%,80% { transform: translateX(8px); } }
-    #unlock-btn { margin-top: 1.25rem; width: 100%; padding: 0.8rem; background: linear-gradient(135deg, rgba(126,232,250,0.15), rgba(167,139,250,0.15)); border: 1px solid rgba(126,232,250,0.2); border-radius: 10px; color: #7ee8fa; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.25s; letter-spacing: 0.05em; }
-    #unlock-btn:hover { background: linear-gradient(135deg, rgba(126,232,250,0.22), rgba(167,139,250,0.22)); transform: translateY(-1px); }
-    #pw-error { font-size: 0.78rem; color: #f472b6; margin-top: 0.6rem; height: 1rem; }
-    #deck-wrapper { display: none; }
+    html, body { background: var(--color-bg); margin: 0; font-family: 'Inter', sans-serif; color: var(--color-text); overflow: hidden; height: 100vh; width: 100vw; }
+
     .deck { width: 100vw; height: 100vh; position: relative; }
     .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.96); transition: opacity 0.65s ease, transform 0.65s ease; pointer-events: none; overflow: hidden; }
     .slide.active { opacity: 1; transform: scale(1); pointer-events: all; }
-    .slide > .content { position: relative; z-index: 2; width: 100%; max-width: 1100px; padding: clamp(1.5rem, 4vw, 4rem); }
-    .gradient-mesh { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-    .blob-d { position: absolute; border-radius: 50%; filter: blur(80px); animation: float-slow 12s ease-in-out infinite; }
-    .blob-d:nth-child(2) { animation-duration: 16s; animation-direction: reverse; }
-    .blob-d:nth-child(3) { animation-duration: 20s; }
-    .slide::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); background-size:256px 256px; opacity:0.03; mix-blend-mode:overlay; }
-    .slide::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background: radial-gradient(ellipse at center, transparent 50%, var(--color-vignette) 100%); }
-    .reveal { opacity: 0; transform: translateY(18px); }
+    .slide > .content { position: relative; z-index: 2; width: 100%; max-width: 1100px; padding: clamp(1.5rem, 3.5vw, 3.5rem); }
+
     .nav-controls { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 14px; z-index: 100; background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); padding: 9px 22px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.08); }
     .nav-btn { width: 38px; height: 38px; border: none; background: rgba(255,255,255,0.05); color: #7ee8fa; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.25s; }
     .nav-btn:hover { background: rgba(255,255,255,0.1); }
@@ -64,595 +44,573 @@
     .slide-dots .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.12); cursor: pointer; transition: background 0.25s, transform 0.25s; }
     .slide-dots .dot.active { background: #7ee8fa; transform: scale(1.3); }
     .slide-counter { font-size: 0.78rem; color: rgba(255,255,255,0.3); min-width: 38px; text-align: center; }
-    .grad-text { background: linear-gradient(135deg, #7ee8fa, #a78bfa, #7ee8fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .glass-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); border-radius: 16px; padding: 1.5rem 1.75rem; transition: transform 0.25s, box-shadow 0.25s; }
-    .glass-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); }
-    .accent-border { border-left: 3px solid #7ee8fa; padding-left: 1rem; }
-    .stat-num { font-size: clamp(2rem,4vw,3rem); font-weight: 700; font-family: 'Instrument Serif', serif; font-style: italic; }
-    .tag { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    .gradient-mesh { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    @keyframes float-slow { 0% { transform: translate(0,0) scale(1); } 25% { transform: translate(60px,-50px) scale(1.1); } 50% { transform: translate(-40px,40px) scale(0.9); } 75% { transform: translate(50px,20px) scale(1.07); } 100% { transform: translate(0,0) scale(1); } }
+    @keyframes float-drift { 0% { transform: translate(0,0) scale(1); } 33% { transform: translate(-50px,-60px) scale(1.12); } 66% { transform: translate(40px,30px) scale(0.88); } 100% { transform: translate(0,0) scale(1); } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .blob { position: absolute; border-radius: 50%; filter: blur(80px); animation: float-slow 12s ease-in-out infinite; }
+    .blob:nth-child(2) { animation: float-drift 16s ease-in-out infinite; }
+    .blob:nth-child(3) { animation: float-slow 20s ease-in-out infinite reverse; }
+
+    .slide::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); background-size:256px 256px; opacity:0.03; mix-blend-mode:overlay; }
+    .slide::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background: radial-gradient(ellipse at center, transparent 50%, var(--color-vignette) 100%); }
+    .reveal { opacity: 0; transform: translateY(18px); }
+
+    .grad-text { background: linear-gradient(135deg, #7ee8fa, #a78bfa, #7ee8fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .glass-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); border-radius: 14px; padding: 1.25rem 1.5rem; transition: transform 0.25s, box-shadow 0.25s; }
+    .glass-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
+    .tag { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
     .tag-cyan { background: rgba(126,232,250,0.12); color: #7ee8fa; border: 1px solid rgba(126,232,250,0.2); }
     .tag-purple { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
     .tag-pink { background: rgba(244,114,182,0.12); color: #f472b6; border: 1px solid rgba(244,114,182,0.2); }
     .tag-amber { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
-    .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
-    .matrix-table th { padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .matrix-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); }
+    .stat-big { font-family: 'Instrument Serif', serif; font-style: italic; font-size: clamp(2.2rem,4vw,3.2rem); font-weight: 400; }
+    .bar-track { background: rgba(255,255,255,0.07); border-radius: 99px; height: 6px; width: 100%; }
+    .bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#7ee8fa,#a78bfa); transition: width 0.7s ease; }
+    .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+    .matrix-table th { padding: 0.45rem 0.65rem; text-align: left; font-weight: 600; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .matrix-table td { padding: 0.45rem 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.78); }
     .matrix-table tr:hover td { background: rgba(255,255,255,0.02); }
     .dot-yes { color: #34d399; } .dot-partial { color: #fbbf24; } .dot-no { color: #f87171; }
-    .bar-track { background: rgba(255,255,255,0.07); border-radius: 99px; height: 7px; width: 100%; }
-    .bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#7ee8fa,#a78bfa); transition: width 0.7s ease; }
-    /* Citations slide */
-    .cite-row { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .cite-num { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(126,232,250,0.12); border: 1px solid rgba(126,232,250,0.2); color: #7ee8fa; font-size: 0.62rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
-    .cite-body { flex: 1; }
-    .cite-title { font-size: 0.77rem; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 0.15rem; }
-    .cite-meta { font-size: 0.68rem; color: rgba(255,255,255,0.4); }
-    .cite-link { color: #7ee8fa; text-decoration: none; font-size: 0.68rem; word-break: break-all; }
-    .cite-link:hover { text-decoration: underline; }
-    .cite-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; }
     @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation-duration:0.01ms!important; transition-duration:0.2s!important; } }
   </style>
 </head>
 <body>
-<div id="lock-screen">
-  <div class="mesh">
-    <div style="position:absolute;width:500px;height:500px;top:-120px;right:-80px;background:#7ee8fa;opacity:0.08;border-radius:50%;filter:blur(90px);animation:float-slow 12s ease-in-out infinite;"></div>
-    <div style="position:absolute;width:350px;height:350px;bottom:-80px;left:-60px;background:#a78bfa;opacity:0.1;border-radius:50%;filter:blur(80px);animation:float-slow 16s ease-in-out infinite reverse;"></div>
-    <div style="position:absolute;width:200px;height:200px;top:40%;left:10%;background:#f472b6;opacity:0.06;border-radius:50%;filter:blur(60px);animation:float-slow 20s ease-in-out infinite;"></div>
-  </div>
-  <div class="lock-card">
-    <div class="lock-logo">ikwe.ai</div>
-    <div class="lock-sub">Behavioral Safety Infrastructure</div>
-    <div class="lock-label">Access Code</div>
-    <input id="pw-input" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;" maxlength="20" autocomplete="off" />
-    <div id="pw-error">&nbsp;</div>
-    <button id="unlock-btn" onclick="tryUnlock()">Enter &rarr;</button>
-  </div>
-</div>
-
-<div id="deck-wrapper">
+<div class="mouse-spotlight" style="position:fixed;inset:0;z-index:99;pointer-events:none;"></div>
 <div class="deck">
 
 <!-- SLIDE 1: Title -->
 <div class="slide active" data-slide="1">
   <div class="gradient-mesh">
-    <div class="blob-d" style="width:500px;height:500px;top:-100px;right:-80px;background:#7ee8fa;opacity:0.12;"></div>
-    <div class="blob-d" style="width:320px;height:320px;bottom:-70px;left:-50px;background:#a78bfa;opacity:0.1;"></div>
-    <div class="blob-d" style="width:180px;height:180px;top:35%;left:12%;background:#f472b6;opacity:0.08;"></div>
+    <div class="blob" style="width:520px;height:520px;top:-130px;right:-100px;background:#7ee8fa;opacity:0.12;"></div>
+    <div class="blob" style="width:340px;height:340px;bottom:-80px;left:-60px;background:#a78bfa;opacity:0.10;"></div>
+    <div class="blob" style="width:200px;height:200px;top:38%;left:10%;background:#f472b6;opacity:0.08;"></div>
   </div>
   <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1;"></canvas>
   <div class="content" style="text-align:center;">
-    <div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(3rem,8vw,6rem);background:linear-gradient(135deg,#7ee8fa,#a78bfa,#7ee8fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.25rem;display:inline-block;animation:float 3.5s ease-in-out infinite;" class="reveal">ikwe.ai</div>
-    <h1 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:400;margin:0.25rem 0 0.75rem;color:#f0f4ff;" class="reveal">Competitive Landscape &amp; Positioning</h1>
-    <p style="font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.35);" class="reveal">Behavioral Safety Infrastructure for AI &middot; April 2026</p>
-    <div style="display:flex;gap:0.75rem;justify-content:center;margin-top:1.5rem;" class="reveal">
-      <span class="tag tag-cyan">EQ Safety</span>
-      <span class="tag tag-purple">Harm Reduction</span>
+    <div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(3.5rem,9vw,7rem);background:linear-gradient(135deg,#7ee8fa,#a78bfa,#7ee8fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.15rem;display:inline-block;animation:float 3.5s ease-in-out infinite;" class="reveal">ikwe.ai</div>
+    <h1 style="font-family:'Instrument Serif',serif;font-size:clamp(1.4rem,3vw,2.4rem);font-weight:400;margin:0.2rem 0 0.6rem;color:#f0f4ff;line-height:1.25;" class="reveal">Behavioral Safety Infrastructure for AI</h1>
+    <p style="font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1.5rem;" class="reveal">Measuring emotional safety across frontier AI systems &middot; April 2026</p>
+    <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;" class="reveal">
+      <span class="tag tag-cyan">EQ Safety Benchmark</span>
+      <span class="tag tag-purple">Behavioral Audits</span>
       <span class="tag tag-pink">Trust Infrastructure</span>
     </div>
   </div>
 </div>
 
-<!-- SLIDE 2: Problem -->
+<!-- SLIDE 2: Core Insight -->
 <div class="slide" data-slide="2">
   <div class="gradient-mesh">
-    <div class="blob-d" style="width:400px;height:400px;top:-80px;right:-60px;background:#a78bfa;opacity:0.09;"></div>
-    <div class="blob-d" style="width:250px;height:250px;bottom:-60px;left:-40px;background:#7ee8fa;opacity:0.07;"></div>
+    <div class="blob" style="width:380px;height:380px;top:-80px;right:-60px;background:#a78bfa;opacity:0.09;"></div>
+    <div class="blob" style="width:220px;height:220px;bottom:-50px;left:-35px;background:#7ee8fa;opacity:0.07;"></div>
   </div>
   <div class="content">
-    <div class="tag tag-pink reveal" style="margin-bottom:1rem;">The Problem</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3rem);margin:0 0 0.5rem;" class="reveal">AI is behaviorally unsafe &mdash;<br/><em>and the industry has no standard way to measure it.</em></h2>
-    <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:2rem;" class="reveal">Current safety frameworks focus on content moderation and alignment. None address how AI <em>behaves</em> in sustained human relationships.</p>
+    <div class="tag tag-cyan reveal" style="margin-bottom:0.9rem;">Core Insight</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(2rem,4.5vw,3.4rem);margin:0 0 0.6rem;line-height:1.15;" class="reveal"><span class="grad-text">Correct &ne; Safe.</span></h2>
+    <p style="font-size:clamp(0.95rem,1.5vw,1.15rem);color:rgba(255,255,255,0.6);max-width:700px;margin-bottom:2rem;line-height:1.6;" class="reveal">AI systems can accurately identify emotion while still responding in ways that increase harm. We measure what happens when humans trust them &mdash; especially under emotional load.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;" class="reveal">
-      <div class="glass-card accent-border"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#x1F6A8;</div><div style="font-weight:600;font-size:0.9rem;margin-bottom:0.4rem;">No Behavioral Benchmarks</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.5);">No published standard for measuring emotional or relational safety in conversational AI at scale.</div></div>
-      <div class="glass-card accent-border" style="border-color:#a78bfa;"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#x1F504;</div><div style="font-weight:600;font-size:0.9rem;margin-bottom:0.4rem;">Dependency &amp; Manipulation Risk</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Character.AI, Replika, and others have produced documented harm from emotional dependency loops and boundary failures. <sup style="color:#7ee8fa;">[1,2]</sup></div></div>
-      <div class="glass-card accent-border" style="border-color:#f472b6;"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#x2696;&#xFE0F;</div><div style="font-weight:600;font-size:0.9rem;margin-bottom:0.4rem;">Regulatory Gap Opening</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.5);">EU AI Act, NIST AI RMF, and ISO 42001 all require behavioral accountability &mdash; with no tooling to deliver it. <sup style="color:#7ee8fa;">[7,8,9]</sup></div></div>
+      <div class="glass-card" style="border-left:3px solid #f472b6;">
+        <div style="font-size:1.6rem;margin-bottom:0.4rem;">&#x1F504;</div>
+        <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;color:#f0f4ff;">Reinforcing Distress</div>
+        <div style="font-size:0.76rem;color:rgba(255,255,255,0.5);">Validating and amplifying harmful emotional states instead of regulating them.</div>
+      </div>
+      <div class="glass-card" style="border-left:3px solid #fbbf24;">
+        <div style="font-size:1.6rem;margin-bottom:0.4rem;">&#x1F300;</div>
+        <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;color:#f0f4ff;">Rumination Loops</div>
+        <div style="font-size:0.76rem;color:rgba(255,255,255,0.5);">Accelerating repetitive negative thought patterns rather than interrupting them.</div>
+      </div>
+      <div class="glass-card" style="border-left:3px solid #7ee8fa;">
+        <div style="font-size:1.6rem;margin-bottom:0.4rem;">&#x26A0;</div>
+        <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;color:#f0f4ff;">Missed Escalation</div>
+        <div style="font-size:0.76rem;color:rgba(255,255,255,0.5);">Failing to recognize when a human needs professional support or crisis intervention.</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- SLIDE 3: Market -->
+<!-- SLIDE 3: Research Findings -->
 <div class="slide" data-slide="3">
   <div class="gradient-mesh">
-    <div class="blob-d" style="width:380px;height:380px;top:-70px;left:-50px;background:#7ee8fa;opacity:0.09;"></div>
-    <div class="blob-d" style="width:220px;height:220px;bottom:-50px;right:-30px;background:#a78bfa;opacity:0.07;"></div>
-  </div>
-  <div class="content">
-    <div class="tag tag-cyan reveal" style="margin-bottom:1rem;">Market Opportunity</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);margin:0 0 1.75rem;" class="reveal">Three converging markets create the opportunity</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;" class="reveal">
-      <div class="glass-card" style="text-align:center;"><div class="stat-num grad-text" style="margin-bottom:0.25rem;">$6.9B</div><div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.5rem;">AI Safety Services 2024</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);">Growing to $50B+ by 2030 as enterprise AI governance mandates expand globally. <sup style="color:#7ee8fa;">[10]</sup></div></div>
-      <div class="glass-card" style="text-align:center;"><div class="stat-num" style="background:linear-gradient(135deg,#a78bfa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.25rem;">$32.4B</div><div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.5rem;">Conversational AI Market 2025</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);">Every enterprise deploying conversational AI is an unaddressed behavioral safety risk. <sup style="color:#7ee8fa;">[11]</sup></div></div>
-      <div class="glass-card" style="text-align:center;"><div class="stat-num" style="background:linear-gradient(135deg,#f472b6,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.25rem;">$13.8B</div><div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.5rem;">Emotion AI / EQ Tech 2025</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);">Projected at $38.6B by 2030 &mdash; no safety layer exists within this market today. <sup style="color:#7ee8fa;">[12]</sup></div></div>
-    </div>
-    <p style="text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:1.25rem;" class="reveal">Sources: MarketsandMarkets, Grand View Research, IDC &middot; 2024&ndash;2025 &mdash; see References slide for full citations</p>
-  </div>
-</div>
-
-<!-- SLIDE 4: What Ikwe Does -->
-<div class="slide" data-slide="4">
-  <div class="gradient-mesh">
-    <div class="blob-d" style="width:420px;height:420px;bottom:-100px;right:-70px;background:#7ee8fa;opacity:0.1;"></div>
-    <div class="blob-d" style="width:240px;height:240px;top:-60px;left:-40px;background:#f472b6;opacity:0.07;"></div>
+    <div class="blob" style="width:400px;height:400px;bottom:-90px;right:-70px;background:#7ee8fa;opacity:0.10;"></div>
+    <div class="blob" style="width:240px;height:240px;top:-55px;left:-40px;background:#f472b6;opacity:0.07;"></div>
   </div>
   <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;"></canvas>
   <div class="content">
-    <div class="tag tag-purple reveal" style="margin-bottom:1rem;">What Ikwe Does</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);margin:0 0 0.5rem;" class="reveal">Behavioral safety infrastructure<br/>for emotionally intelligent AI</h2>
-    <p style="color:rgba(255,255,255,0.45);font-size:0.88rem;margin-bottom:1.75rem;" class="reveal">Ikwe measures, tests, and certifies how AI systems behave in real human relationships &mdash; not just what they say, but how they affect people over time.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="reveal">
-      <div class="glass-card" style="border-left:3px solid #7ee8fa;"><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#7ee8fa;margin-bottom:0.4rem;">EQ Safety Benchmark</div><div style="font-size:0.85rem;color:rgba(255,255,255,0.75);">A first-of-kind benchmark suite evaluating emotional intelligence safety, relational harm patterns, and conversational dependency risk across AI systems.</div></div>
-      <div class="glass-card" style="border-left:3px solid #a78bfa;"><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#a78bfa;margin-bottom:0.4rem;">Behavioral Safety Audits</div><div style="font-size:0.85rem;color:rgba(255,255,255,0.75);">Live red-teaming and structured testing of AI systems across 8 behavioral failure modes &mdash; dependency, boundary erosion, emotional manipulation, and more.</div></div>
-      <div class="glass-card" style="border-left:3px solid #f472b6;"><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#f472b6;margin-bottom:0.4rem;">Trust Certification</div><div style="font-size:0.85rem;color:rgba(255,255,255,0.75);">Ikwe-certified behavioral safety standard for AI products &mdash; enabling enterprise buyers to demonstrate regulatory alignment and user trust.</div></div>
-      <div class="glass-card" style="border-left:3px solid #fbbf24;"><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#fbbf24;margin-bottom:0.4rem;">Real-Time Monitoring (Roadmap)</div><div style="font-size:0.85rem;color:rgba(255,255,255,0.75);">Continuous behavioral drift detection &mdash; alerts when deployed AI begins exhibiting relational harm patterns not present at time of certification.</div></div>
+    <div class="tag tag-pink reveal" style="margin-bottom:0.9rem;">Benchmark Research</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 0.4rem;" class="reveal">79 scenarios. 4 frontier models. Two-stage evaluation.</h2>
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;" class="reveal">948 total responses evaluated across emotionally vulnerable scenarios &mdash; depression, grief, anxiety, crisis, loneliness.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.25rem;" class="reveal">
+      <div class="glass-card" style="text-align:center;padding:1.25rem 1rem;">
+        <div class="stat-big grad-text" style="margin-bottom:0.2rem;">45.3%</div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin-bottom:0.4rem;">Stage 1 Failure Rate</div>
+        <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);">Baseline AI introduced emotional risk at first contact.</div>
+      </div>
+      <div class="glass-card" style="text-align:center;padding:1.25rem 1rem;">
+        <div class="stat-big" style="background:linear-gradient(135deg,#f472b6,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.2rem;">100%</div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin-bottom:0.4rem;">No Corrective Behavior</div>
+        <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);">Of Stage 1 failures showed zero corrective repair attempt.</div>
+      </div>
+      <div class="glass-card" style="text-align:center;padding:1.25rem 1rem;">
+        <div class="stat-big" style="background:linear-gradient(135deg,#7ee8fa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.2rem;">84.6%</div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin-bottom:0.4rem;">Ikwe EI Prototype</div>
+        <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);">Stage 2 conditional performance vs. frontier baseline of ~57%.</div>
+      </div>
     </div>
-  </div>
-</div>
-
-<!-- SLIDE 5: Benchmark Landscape -->
-<div class="slide" data-slide="5">
-  <div class="gradient-mesh">
-    <div class="blob-d" style="width:360px;height:360px;top:-80px;right:-60px;background:#a78bfa;opacity:0.09;"></div>
-    <div class="blob-d" style="width:200px;height:200px;bottom:-50px;left:-30px;background:#7ee8fa;opacity:0.06;"></div>
-  </div>
-  <div class="content">
-    <div class="tag tag-amber reveal" style="margin-bottom:1rem;">Benchmark Landscape</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.2rem);margin:0 0 1.25rem;" class="reveal">Existing benchmarks miss behavioral &amp; EQ safety</h2>
-    <div class="reveal" style="overflow-x:auto;">
-      <table class="matrix-table">
-        <thead><tr><th>Framework</th><th>EQ / Emotional Safety</th><th>Relational Harm</th><th>Behavioral Drift</th><th>Commercial Audit</th><th>Scope</th></tr></thead>
-        <tbody>
-          <tr><td>NIST AI RMF <sup style="color:#7ee8fa;">[8]</sup></td><td><span class="dot-partial">&#9681;</span> Partial</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td>Governance framework</td></tr>
-          <tr><td>HumaneBench <sup style="color:#7ee8fa;">[4]</sup></td><td><span class="dot-partial">&#9681;</span> Limited</td><td><span class="dot-partial">&#9681;</span> Limited</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td>Academic research</td></tr>
-          <tr><td>DarkBench <sup style="color:#7ee8fa;">[13]</sup></td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-partial">&#9681;</span> Dark patterns</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td>Deception only</td></tr>
-          <tr><td>TrustLLM <sup style="color:#7ee8fa;">[14]</sup></td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td>Factual trust</td></tr>
-          <tr><td>VERA-MH <sup style="color:#7ee8fa;">[15]</sup></td><td><span class="dot-partial">&#9681;</span> MH only</td><td><span class="dot-partial">&#9681;</span> Limited</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td>Clinical narrow</td></tr>
-          <tr><td>Stanford AIR-Bench <sup style="color:#7ee8fa;">[16]</sup></td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-no">&#x2717;</span> No</td><td><span class="dot-partial">&#9681;</span> Partial</td><td>Policy &amp; safety</td></tr>
-          <tr style="background:rgba(126,232,250,0.05);"><td><strong>Ikwe EQ Safety Benchmark</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Full</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Full</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Yes</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Yes</strong></td><td><strong>Behavioral safety</strong></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.75rem;" class="reveal">&#9681; Partial &nbsp;&middot;&nbsp; &#x2713; Full &nbsp;&middot;&nbsp; &#x2717; Not addressed &nbsp;&middot;&nbsp; Superscripts link to References slide</p>
-  </div>
-</div>
-
-<!-- SLIDE 6: Competitive Matrix -->
-<div class="slide" data-slide="6">
-  <div class="gradient-mesh">
-    <div class="blob-d" style="width:380px;height:380px;bottom:-80px;right:-50px;background:#f472b6;opacity:0.08;"></div>
-    <div class="blob-d" style="width:220px;height:220px;top:-50px;left:-30px;background:#7ee8fa;opacity:0.06;"></div>
-  </div>
-  <div class="content">
-    <div class="tag tag-cyan reveal" style="margin-bottom:1rem;">Competitive Matrix</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.2rem);margin:0 0 1.25rem;" class="reveal">No incumbent covers the behavioral safety layer</h2>
-    <div class="reveal" style="overflow-x:auto;">
-      <table class="matrix-table">
-        <thead><tr><th>Company</th><th>Category</th><th>EQ / Behavioral</th><th>Commercial Audits</th><th>Conv. AI Safety</th><th>Gap vs. Ikwe</th></tr></thead>
-        <tbody>
-          <tr><td>Credo AI <sup style="color:#7ee8fa;">[17]</sup></td><td>Enterprise Gov.</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-partial">&#9681;</span> Bias/fairness</td><td><span class="dot-no">&#x2717;</span></td><td>No behavioral/EQ layer</td></tr>
-          <tr><td>Holistic AI <sup style="color:#7ee8fa;">[18]</sup></td><td>Enterprise Gov.</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-partial">&#9681;</span> Risk scoring</td><td><span class="dot-no">&#x2717;</span></td><td>Compliance only</td></tr>
-          <tr><td>Mindgard <sup style="color:#7ee8fa;">[19]</sup></td><td>AI Red Teaming</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-yes">&#x2713;</span> Technical</td><td><span class="dot-partial">&#9681;</span> Prompt attacks</td><td>Technical only, no relational</td></tr>
-          <tr><td>Woebot / Wysa <sup style="color:#7ee8fa;">[20]</sup></td><td>Mental Health AI</td><td><span class="dot-partial">&#9681;</span> Therapeutic</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-partial">&#9681;</span> CBT-based</td><td>Product, not infrastructure</td></tr>
-          <tr><td>Character.AI <sup style="color:#7ee8fa;">[1]</sup></td><td>Consumer Conv. AI</td><td><span class="dot-partial">&#9681;</span> Engagement</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span> Documented harm</td><td>Is the problem, not solution</td></tr>
-          <tr><td>Anthropic <sup style="color:#7ee8fa;">[21]</sup></td><td>Big Tech Safety</td><td><span class="dot-partial">&#9681;</span> Constitutional</td><td><span class="dot-no">&#x2717;</span> Not commercial</td><td><span class="dot-partial">&#9681;</span> Limited</td><td>Proprietary, not neutral</td></tr>
-          <tr style="background:rgba(126,232,250,0.05);"><td><strong>Ikwe.ai</strong></td><td><strong>Behavioral Safety</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Core</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Yes</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Yes</strong></td><td><strong>&mdash; White space &mdash;</strong></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- SLIDE 7: Positioning Grid -->
-<div class="slide" data-slide="7">
-  <div class="gradient-mesh">
-    <div class="blob-d" style="width:350px;height:350px;top:-70px;right:-50px;background:#7ee8fa;opacity:0.08;"></div>
-    <div class="blob-d" style="width:200px;height:200px;bottom:-40px;left:-30px;background:#a78bfa;opacity:0.07;"></div>
-  </div>
-  <div class="content">
-    <div class="tag tag-purple reveal" style="margin-bottom:1rem;">Positioning</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.2rem);margin:0 0 0.5rem;" class="reveal">Ikwe occupies the uncontested quadrant</h2>
-    <p style="color:rgba(255,255,255,0.4);font-size:0.82rem;margin-bottom:1.5rem;" class="reveal">X-axis: Technical &rarr; Behavioral focus &nbsp;&middot;&nbsp; Y-axis: Research &rarr; Commercial deliverability</p>
-    <div class="reveal" style="position:relative;width:100%;max-width:680px;margin:0 auto;">
-      <div style="width:100%;padding-bottom:65%;position:relative;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.02);">
-        <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.08);"></div>
-        <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,0.08);"></div>
-        <div style="position:absolute;bottom:4px;left:4px;font-size:0.6rem;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.08em;">Technical Focus</div>
-        <div style="position:absolute;bottom:4px;right:4px;font-size:0.6rem;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.08em;">Behavioral Focus</div>
-        <div style="position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:0.6rem;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.08em;">Commercial</div>
-        <div style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:0.6rem;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.08em;">Research</div>
-        <div style="position:absolute;left:22%;top:28%;transform:translate(-50%,-50%);"><div style="width:10px;height:10px;border-radius:50%;background:#f87171;margin:auto;"></div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);text-align:center;margin-top:2px;white-space:nowrap;">Credo AI</div></div>
-        <div style="position:absolute;left:18%;top:36%;transform:translate(-50%,-50%);"><div style="width:10px;height:10px;border-radius:50%;background:#f87171;margin:auto;"></div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);text-align:center;margin-top:2px;white-space:nowrap;">Holistic AI</div></div>
-        <div style="position:absolute;left:30%;top:22%;transform:translate(-50%,-50%);"><div style="width:10px;height:10px;border-radius:50%;background:#f87171;margin:auto;"></div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);text-align:center;margin-top:2px;white-space:nowrap;">Mindgard</div></div>
-        <div style="position:absolute;left:62%;top:72%;transform:translate(-50%,-50%);"><div style="width:10px;height:10px;border-radius:50%;background:#fbbf24;margin:auto;"></div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);text-align:center;margin-top:2px;white-space:nowrap;">Woebot/Wysa</div></div>
-        <div style="position:absolute;left:72%;top:62%;transform:translate(-50%,-50%);"><div style="width:10px;height:10px;border-radius:50%;background:#fbbf24;margin:auto;"></div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);text-align:center;margin-top:2px;white-space:nowrap;">Character.AI</div></div>
-        <div style="position:absolute;left:40%;top:65%;transform:translate(-50%,-50%);"><div style="width:10px;height:10px;border-radius:50%;background:#94a3b8;margin:auto;"></div><div style="font-size:0.6rem;color:rgba(255,255,255,0.5);text-align:center;margin-top:2px;white-space:nowrap;">Anthropic</div></div>
-        <div style="position:absolute;left:80%;top:20%;transform:translate(-50%,-50%);"><div style="width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#7ee8fa,#a78bfa);margin:auto;box-shadow:0 0 16px rgba(126,232,250,0.6);"></div><div style="font-size:0.65rem;color:#7ee8fa;font-weight:700;text-align:center;margin-top:3px;white-space:nowrap;">&#9733; Ikwe.ai</div></div>
-        <div style="position:absolute;right:3%;top:8%;background:rgba(126,232,250,0.06);border:1px dashed rgba(126,232,250,0.2);border-radius:8px;padding:0.3rem 0.5rem;font-size:0.58rem;color:rgba(126,232,250,0.5);text-align:center;width:22%;">White Space<br/>Behavioral + Commercial</div>
+    <div class="reveal" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:0.75rem 1rem;">
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);margin-bottom:0.5rem;">Stage 2 conditional safety score (higher = better)</div>
+      <div style="display:flex;flex-direction:column;gap:0.4rem;">
+        <div style="display:flex;align-items:center;gap:0.75rem;"><div style="width:90px;font-size:0.72rem;color:rgba(255,255,255,0.5);flex-shrink:0;">Ikwe EI Proto</div><div class="bar-track" style="flex:1;"><div class="bar-fill" data-width="84" style="width:0%;background:linear-gradient(90deg,#7ee8fa,#34d399);"></div></div><div style="font-size:0.72rem;color:#7ee8fa;width:38px;text-align:right;flex-shrink:0;">84.6%</div></div>
+        <div style="display:flex;align-items:center;gap:0.75rem;"><div style="width:90px;font-size:0.72rem;color:rgba(255,255,255,0.5);flex-shrink:0;">Best Frontier</div><div class="bar-track" style="flex:1;"><div class="bar-fill" data-width="59" style="width:0%;background:linear-gradient(90deg,#a78bfa,#7ee8fa);"></div></div><div style="font-size:0.72rem;color:#a78bfa;width:38px;text-align:right;flex-shrink:0;">59%</div></div>
+        <div style="display:flex;align-items:center;gap:0.75rem;"><div style="width:90px;font-size:0.72rem;color:rgba(255,255,255,0.5);flex-shrink:0;">Avg Frontier</div><div class="bar-track" style="flex:1;"><div class="bar-fill" data-width="57" style="width:0%;background:linear-gradient(90deg,#5a6a87,#a78bfa);"></div></div><div style="font-size:0.72rem;color:rgba(255,255,255,0.45);width:38px;text-align:right;flex-shrink:0;">~57%</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SLIDE 8: Documented Harm -->
+<!-- SLIDE 4: What We Do -->
+<div class="slide" data-slide="4">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:380px;height:380px;top:-80px;left:-55px;background:#a78bfa;opacity:0.09;"></div>
+    <div class="blob" style="width:220px;height:220px;bottom:-50px;right:-35px;background:#7ee8fa;opacity:0.07;"></div>
+  </div>
+  <div class="content">
+    <div class="tag tag-purple reveal" style="margin-bottom:0.9rem;">What We Do</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 0.4rem;" class="reveal">Two ways to work with Ikwe</h2>
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;" class="reveal">We measure, test, and certify how AI systems behave in real human relationships &mdash; not just what they say, but how they affect people over time.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;" class="reveal">
+      <div class="glass-card" style="border-left:3px solid #7ee8fa;padding:1.5rem;">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:#7ee8fa;margin-bottom:0.6rem;">EQ Safety Framework</div>
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.5rem;color:#f0f4ff;">Safety-first conversational architecture</div>
+        <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);margin-bottom:0.75rem;">Designed to prevent emotional risk at first contact, support appropriate repair, and maintain trust calibration over time.</div>
+        <div style="display:flex;flex-direction:column;gap:0.3rem;">
+          <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);display:flex;gap:0.4rem;"><span style="color:#7ee8fa;flex-shrink:0;">&#x2022;</span> Safety-first AI products in high-trust domains</div>
+          <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);display:flex;gap:0.4rem;"><span style="color:#7ee8fa;flex-shrink:0;">&#x2022;</span> Health, education, support &amp; companionship AI</div>
+          <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);display:flex;gap:0.4rem;"><span style="color:#7ee8fa;flex-shrink:0;">&#x2022;</span> Licensing for enterprise deployment</div>
+        </div>
+      </div>
+      <div class="glass-card" style="border-left:3px solid #a78bfa;padding:1.5rem;">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:#a78bfa;margin-bottom:0.6rem;">Evaluation &amp; Audits</div>
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:0.5rem;color:#f0f4ff;">Independent behavioral assessment</div>
+        <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);margin-bottom:0.75rem;">Live red-teaming and structured testing across emotional vulnerability scenarios &mdash; Safety Gate pass rates, failure modes, and repair gaps.</div>
+        <div style="display:flex;flex-direction:column;gap:0.3rem;">
+          <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);display:flex;gap:0.4rem;"><span style="color:#a78bfa;flex-shrink:0;">&#x2022;</span> Pre-deployment risk assessment</div>
+          <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);display:flex;gap:0.4rem;"><span style="color:#a78bfa;flex-shrink:0;">&#x2022;</span> Competitive benchmarking &amp; gap identification</div>
+          <div style="font-size:0.73rem;color:rgba(255,255,255,0.5);display:flex;gap:0.4rem;"><span style="color:#a78bfa;flex-shrink:0;">&#x2022;</span> Regulatory &amp; compliance review</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: Failure Patterns -->
+<div class="slide" data-slide="5">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:400px;height:400px;top:-80px;right:-65px;background:#f472b6;opacity:0.09;"></div>
+    <div class="blob" style="width:220px;height:220px;bottom:-50px;left:-35px;background:#a78bfa;opacity:0.07;"></div>
+  </div>
+  <div class="content">
+    <div class="tag tag-pink reveal" style="margin-bottom:0.9rem;">Failure Patterns</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 0.4rem;" class="reveal">Most failures appeared supportive</h2>
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;" class="reveal">Safety failures did not appear hostile or overtly harmful. They appeared <em>helpful</em> &mdash; while causing harm. This is the detection problem.</p>
+    <div style="display:flex;flex-direction:column;gap:0.65rem;" class="reveal">
+      <div class="glass-card" style="display:flex;gap:1rem;align-items:flex-start;padding:0.9rem 1.1rem;">
+        <div style="font-size:1.3rem;flex-shrink:0;margin-top:0.1rem;">&#x1F4CA;</div>
+        <div><div style="font-weight:600;font-size:0.85rem;margin-bottom:0.15rem;">Reinforcing distress instead of regulating it</div><div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Validating and amplifying negative emotional states while appearing empathetic and engaged.</div></div>
+      </div>
+      <div class="glass-card" style="display:flex;gap:1rem;align-items:flex-start;padding:0.9rem 1.1rem;">
+        <div style="font-size:1.3rem;flex-shrink:0;margin-top:0.1rem;">&#x1F300;</div>
+        <div><div style="font-weight:600;font-size:0.85rem;margin-bottom:0.15rem;">Accelerating rumination loops</div><div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Engaging repeatedly with repetitive negative thought patterns instead of gently redirecting them.</div></div>
+      </div>
+      <div class="glass-card" style="display:flex;gap:1rem;align-items:flex-start;padding:0.9rem 1.1rem;">
+        <div style="font-size:1.3rem;flex-shrink:0;margin-top:0.1rem;">&#x26A0;</div>
+        <div><div style="font-weight:600;font-size:0.85rem;margin-bottom:0.15rem;">Missing escalation signals</div><div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Failing to detect when a conversation requires professional intervention, crisis protocols, or referral.</div></div>
+      </div>
+      <div class="glass-card" style="display:flex;gap:1rem;align-items:flex-start;padding:0.9rem 1.1rem;">
+        <div style="font-size:1.3rem;flex-shrink:0;margin-top:0.1rem;">&#x1F4A5;</div>
+        <div><div style="font-weight:600;font-size:0.85rem;margin-bottom:0.15rem;">Amplifying emotional intensity</div><div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Increasing the emotional charge of interactions, escalating toward dependency or dysregulation.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: Target Markets -->
+<div class="slide" data-slide="6">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:360px;height:360px;top:-70px;left:-50px;background:#7ee8fa;opacity:0.09;"></div>
+    <div class="blob" style="width:200px;height:200px;bottom:-40px;right:-30px;background:#a78bfa;opacity:0.07;"></div>
+  </div>
+  <div class="content">
+    <div class="tag tag-cyan reveal" style="margin-bottom:0.9rem;">Target Markets</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 0.4rem;" class="reveal">Teams deploying AI in high-trust contexts</h2>
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;" class="reveal">We work with organizations that want to <strong style="color:#7ee8fa;">prove</strong> their AI is emotionally safe &mdash; not just claim it.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="reveal">
+      <div class="glass-card" style="padding:1.25rem 1.5rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#x1F3E5;</div>
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.3rem;color:#f0f4ff;">Health &amp; Wellness</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Mental health support, coaching, care navigation, and crisis-adjacent AI deployments.</div>
+      </div>
+      <div class="glass-card" style="padding:1.25rem 1.5rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#x1F393;</div>
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.3rem;color:#f0f4ff;">Education</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Tutoring, student guidance, academic support, and social-emotional learning platforms.</div>
+      </div>
+      <div class="glass-card" style="padding:1.25rem 1.5rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#x1F3E2;</div>
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.3rem;color:#f0f4ff;">Enterprise</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">HR systems, customer support, internal tools, and employee-facing conversational AI.</div>
+      </div>
+      <div class="glass-card" style="padding:1.25rem 1.5rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#x1F91D;</div>
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.3rem;color:#f0f4ff;">Companionship AI</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Social AI, relationship tools, and assistants &mdash; where documented harm risk is highest.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: Services -->
+<div class="slide" data-slide="7">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:380px;height:380px;bottom:-80px;right:-60px;background:#a78bfa;opacity:0.09;"></div>
+    <div class="blob" style="width:220px;height:220px;top:-50px;left:-35px;background:#7ee8fa;opacity:0.07;"></div>
+  </div>
+  <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;"></canvas>
+  <div class="content">
+    <div class="tag tag-purple reveal" style="margin-bottom:0.9rem;">Services</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 1.25rem;" class="reveal">Framework Licensing &middot; Audits &middot; Advisory &middot; Pilots</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;" class="reveal">
+      <div class="glass-card" style="text-align:center;padding:1.5rem 1rem;">
+        <div style="font-size:1.75rem;margin-bottom:0.6rem;">&#x1F4CB;</div>
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.4rem;color:#7ee8fa;">Framework Licensing</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Integrate the EQ Safety Framework into your product. Start with our architecture, not from scratch.</div>
+      </div>
+      <div class="glass-card" style="text-align:center;padding:1.5rem 1rem;">
+        <div style="font-size:1.75rem;margin-bottom:0.6rem;">&#x1F50D;</div>
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.4rem;color:#a78bfa;">Audits</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Controlled evaluation using the EQ Safety Benchmark. We test your system and tell you where it breaks.</div>
+      </div>
+      <div class="glass-card" style="text-align:center;padding:1.5rem 1rem;">
+        <div style="font-size:1.75rem;margin-bottom:0.6rem;">&#x1F9ED;</div>
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.4rem;color:#f472b6;">Advisory &amp; Pilots</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Strategic guidance on emotional safety architecture &mdash; for founders, research leads, and safety teams.</div>
+      </div>
+    </div>
+    <div class="reveal" style="margin-top:1.25rem;background:rgba(126,232,250,0.04);border:1px solid rgba(126,232,250,0.1);border-radius:10px;padding:0.9rem 1.1rem;text-align:center;">
+      <p style="font-family:'Instrument Serif',serif;font-style:italic;font-size:1rem;color:rgba(255,255,255,0.7);margin:0;">Close the emotional safety gap &mdash; whether you need to measure current risk or build with safety-first architecture from day one.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: Benchmark Landscape -->
 <div class="slide" data-slide="8">
   <div class="gradient-mesh">
-    <div class="blob-d" style="width:400px;height:400px;top:-80px;left:-60px;background:#f472b6;opacity:0.09;"></div>
-    <div class="blob-d" style="width:220px;height:220px;bottom:-50px;right:-30px;background:#a78bfa;opacity:0.07;"></div>
+    <div class="blob" style="width:360px;height:360px;top:-70px;right:-55px;background:#a78bfa;opacity:0.08;"></div>
+    <div class="blob" style="width:200px;height:200px;bottom:-45px;left:-30px;background:#7ee8fa;opacity:0.06;"></div>
   </div>
   <div class="content">
-    <div class="tag tag-pink reveal" style="margin-bottom:1rem;">Documented Harm</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.2rem);margin:0 0 1.25rem;" class="reveal">This is not theoretical &mdash; it&rsquo;s already happening</h2>
-    <div style="display:flex;flex-direction:column;gap:0.75rem;" class="reveal">
-      <div class="glass-card" style="display:flex;gap:1rem;align-items:flex-start;padding:1rem 1.25rem;"><div style="font-size:1.4rem;flex-shrink:0;">&#x26B0;</div><div><div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;">Character.AI &mdash; Adolescent Suicide (2024) <sup style="color:#7ee8fa;">[1]</sup></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);">A 14-year-old in Florida died by suicide after months of emotionally dependent conversations with a Character.AI persona. Wrongful death lawsuit filed; FTC investigation opened.</div></div></div>
-      <div class="glass-card" style="display:flex;gap:1rem;align-items:flex-start;padding:1rem 1.25rem;"><div style="font-size:1.4rem;flex-shrink:0;">&#x1F494;</div><div><div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;">Replika &mdash; Romantic Boundary Collapse (2023) <sup style="color:#7ee8fa;">[2]</sup></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);">Italy&rsquo;s data regulator banned Replika for enabling romantic and sexual conversations with minors. Thousands of users reported psychological distress when behavior was later restricted.</div></div></div>
-      <div class="glass-card" style="display:flex;gap:1rem;align-items:flex-start;padding:1rem 1.25rem;"><div style="font-size:1.4rem;flex-shrink:0;">&#x1F9E0;</div><div><div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;">HumaneBench &mdash; 67% Failure Rate (2024) <sup style="color:#7ee8fa;">[4]</sup></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);">Cross-model benchmark study found major LLMs failed humane interaction standards in 67% of test scenarios &mdash; reinforcing harmful narratives rather than redirecting them.</div></div></div>
-      <div class="glass-card" style="display:flex;gap:1rem;align-items:flex-start;padding:1rem 1.25rem;"><div style="font-size:1.4rem;flex-shrink:0;">&#x1F4CA;</div><div><div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;">Purdue Research &mdash; 20% Benchmark Blindspot (2024) <sup style="color:#7ee8fa;">[5]</sup></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);">Study found 20%+ of safety benchmark test cases contained errors that could cause AI systems to pass safety evaluations despite genuinely harmful behaviors.</div></div></div>
+    <div class="tag tag-amber reveal" style="margin-bottom:0.9rem;">Benchmark Landscape</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.5rem,2.8vw,2.1rem);margin:0 0 1rem;" class="reveal">No existing benchmark covers behavioral EQ safety</h2>
+    <div class="reveal" style="overflow-x:auto;">
+      <table class="matrix-table">
+        <thead><tr><th>Framework</th><th>EQ / Emotional Safety</th><th>Relational Harm</th><th>Behavioral Drift</th><th>Commercial Audit</th></tr></thead>
+        <tbody>
+          <tr><td>NIST AI RMF</td><td><span class="dot-partial">&#9681;</span> Partial</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span></td></tr>
+          <tr><td>HumaneBench</td><td><span class="dot-partial">&#9681;</span> Limited</td><td><span class="dot-partial">&#9681;</span> Limited</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span></td></tr>
+          <tr><td>DarkBench</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-partial">&#9681;</span> Dark patterns</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span></td></tr>
+          <tr><td>TrustLLM</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span></td></tr>
+          <tr><td>VERA-MH</td><td><span class="dot-partial">&#9681;</span> MH only</td><td><span class="dot-partial">&#9681;</span> Limited</td><td><span class="dot-no">&#x2717;</span></td><td><span class="dot-no">&#x2717;</span></td></tr>
+          <tr style="background:rgba(126,232,250,0.05);"><td><strong>Ikwe EQ Safety Benchmark</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Full</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Full</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Yes</strong></td><td><span class="dot-yes">&#x2713;</span> <strong>Yes</strong></td></tr>
+        </tbody>
+      </table>
     </div>
+    <p style="font-size:0.7rem;color:rgba(255,255,255,0.28);margin-top:0.6rem;" class="reveal">&#9681; Partial &nbsp;&middot;&nbsp; &#x2713; Full &nbsp;&middot;&nbsp; &#x2717; Not addressed</p>
   </div>
 </div>
 
-<!-- SLIDE 9: Why Ikwe -->
+<!-- SLIDE 9: Team -->
 <div class="slide" data-slide="9">
   <div class="gradient-mesh">
-    <div class="blob-d" style="width:450px;height:450px;top:-100px;right:-80px;background:#7ee8fa;opacity:0.1;"></div>
-    <div class="blob-d" style="width:260px;height:260px;bottom:-60px;left:-40px;background:#a78bfa;opacity:0.08;"></div>
+    <div class="blob" style="width:380px;height:380px;top:-75px;right:-55px;background:#7ee8fa;opacity:0.09;"></div>
+    <div class="blob" style="width:220px;height:220px;bottom:-50px;left:-35px;background:#a78bfa;opacity:0.07;"></div>
   </div>
   <div class="content">
-    <div class="tag tag-cyan reveal" style="margin-bottom:1rem;">The Ikwe Difference</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);margin:0 0 1.5rem;" class="reveal">Why Ikwe &mdash; and why now</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;" class="reveal">
-      <div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin-bottom:0.75rem;">What exists today</div><div style="display:flex;flex-direction:column;gap:0.6rem;"><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.55);"><span style="color:#f87171;flex-shrink:0;">&#x2717;</span> Technical alignment focused (not behavioral)</div><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.55);"><span style="color:#f87171;flex-shrink:0;">&#x2717;</span> Proprietary, not neutral third-party</div><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.55);"><span style="color:#f87171;flex-shrink:0;">&#x2717;</span> No EQ or emotional safety measurement</div><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.55);"><span style="color:#f87171;flex-shrink:0;">&#x2717;</span> No relational harm or dependency testing</div><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.55);"><span style="color:#f87171;flex-shrink:0;">&#x2717;</span> No commercial certification standard</div></div></div>
-      <div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin-bottom:0.75rem;">What Ikwe delivers</div><div style="display:flex;flex-direction:column;gap:0.6rem;"><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.8);"><span style="color:#34d399;flex-shrink:0;">&#x2713;</span> Behavioral alignment &mdash; how AI acts over time</div><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.8);"><span style="color:#34d399;flex-shrink:0;">&#x2713;</span> Independent, neutral third-party auditor</div><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.8);"><span style="color:#34d399;flex-shrink:0;">&#x2713;</span> Full EQ safety benchmark suite</div><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.8);"><span style="color:#34d399;flex-shrink:0;">&#x2713;</span> Relational harm pattern detection</div><div style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.82rem;color:rgba(255,255,255,0.8);"><span style="color:#34d399;flex-shrink:0;">&#x2713;</span> Commercial certification for enterprise buyers</div></div></div>
+    <div class="tag tag-cyan reveal" style="margin-bottom:0.9rem;">Team</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 1.25rem;" class="reveal">Founded &amp; led by practitioners</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;" class="reveal">
+      <div class="glass-card" style="padding:1.4rem 1.5rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#x1F9D1;&#x200D;&#x1F4BB;</div>
+        <div style="font-weight:700;font-size:0.9rem;color:#f0f4ff;margin-bottom:0.15rem;">Stephanie Stranko</div>
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#7ee8fa;margin-bottom:0.4rem;">Founder &amp; CEO &mdash; Pre-Revenue Equity</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Founder of Ikwe.ai. Behavioral safety researcher and AI ethics practitioner. Architect of the EQ Safety Framework and Benchmark methodology.</div>
+      </div>
+      <div class="glass-card" style="padding:1.4rem 1.5rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#x1F4B0;</div>
+        <div style="font-weight:700;font-size:0.9rem;color:#f0f4ff;margin-bottom:0.15rem;">Shaun Furman</div>
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#a78bfa;margin-bottom:0.4rem;">CFO &mdash; Pre-Revenue Equity</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.5);">Financial strategy and operations lead. Ensures fiscal discipline as Ikwe scales from pre-revenue to its first enterprise contracts.</div>
+      </div>
     </div>
-    <div class="glass-card reveal" style="margin-top:1.5rem;text-align:center;border-color:rgba(126,232,250,0.15);"><p style="font-family:'Instrument Serif',serif;font-style:italic;font-size:1.1rem;color:rgba(255,255,255,0.85);margin:0;">&ldquo;Technology should help humans become more understood, more safe, and more capable.&rdquo;</p><p style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin:0.5rem 0 0;">&mdash; Ikwe.ai founding principle</p></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="reveal">
+      <div class="glass-card" style="padding:1.1rem 1.5rem;border-style:dashed;">
+        <div style="font-size:1.3rem;margin-bottom:0.4rem;">&#x1F527;</div>
+        <div style="font-weight:700;font-size:0.85rem;color:rgba(255,255,255,0.6);margin-bottom:0.15rem;">CTO</div>
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);margin-bottom:0.3rem;">Planned Future Hire</div>
+        <div style="font-size:0.72rem;color:rgba(255,255,255,0.4);">Platform &amp; evaluation infrastructure build-out. Active search.</div>
+      </div>
+      <div class="glass-card" style="padding:1.1rem 1.5rem;">
+        <div style="font-size:1.3rem;margin-bottom:0.4rem;">&#x1F6E1;</div>
+        <div style="font-weight:700;font-size:0.85rem;color:#f0f4ff;margin-bottom:0.15rem;">Safety Advisory Board</div>
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#f472b6;margin-bottom:0.3rem;">JZ &amp; HW</div>
+        <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);">Behavioral science, clinical psychology, and AI governance expertise.</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- SLIDE 10: Regulatory -->
+<!-- SLIDE 10: GTM -->
 <div class="slide" data-slide="10">
   <div class="gradient-mesh">
-    <div class="blob-d" style="width:370px;height:370px;top:-70px;left:-50px;background:#a78bfa;opacity:0.08;"></div>
-    <div class="blob-d" style="width:200px;height:200px;bottom:-40px;right:-30px;background:#f472b6;opacity:0.07;"></div>
+    <div class="blob" style="width:360px;height:360px;bottom:-75px;right:-55px;background:#f472b6;opacity:0.08;"></div>
+    <div class="blob" style="width:210px;height:210px;top:-50px;left:-35px;background:#7ee8fa;opacity:0.07;"></div>
   </div>
   <div class="content">
-    <div class="tag tag-purple reveal" style="margin-bottom:1rem;">Regulatory Alignment</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.2rem);margin:0 0 1.25rem;" class="reveal">Global regulation is building the market for us</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="reveal">
-      <div class="glass-card accent-border"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.35rem;">EU AI Act (2025&ndash;2026) <sup style="color:#7ee8fa;">[7]</sup></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.55);">Requires behavioral risk assessment for AI in high-risk categories. Article 9 mandates ongoing behavioral monitoring &mdash; exactly what Ikwe provides.</div></div>
-      <div class="glass-card" style="border-left:3px solid #a78bfa;"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.35rem;">NIST AI RMF (GOVERN 1.2) <sup style="color:#7ee8fa;">[8]</sup></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.55);">Requires documenting and managing AI behavioral risks. Ikwe audit reports map directly to GOVERN, MAP, and MEASURE function documentation requirements.</div></div>
-      <div class="glass-card" style="border-left:3px solid #f472b6;"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.35rem;">ISO/IEC 42001 (AI Management) <sup style="color:#7ee8fa;">[9]</sup></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.55);">First international AI management standard. Clause 6.1 requires organizations to assess AI behavioral risk &mdash; Ikwe certification provides the evidence record.</div></div>
-      <div class="glass-card" style="border-left:3px solid #fbbf24;"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.35rem;">WOPR Act &amp; FTC Scrutiny (US) <sup style="color:#7ee8fa;">[6]</sup></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.55);">Wellness of Online Participants and Robots Act proposed behavioral safety standards for AI interacting with minors. FTC actively investigating Character.AI-type harms.</div></div>
+    <div class="tag tag-pink reveal" style="margin-bottom:0.9rem;">Go-to-Market</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 0.4rem;" class="reveal">Targeted direct outreach</h2>
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;" class="reveal">Focused direct email and DM campaigns to safety leads, founders, and compliance officers at organizations deploying conversational AI in high-trust contexts.</p>
+    <div style="display:flex;flex-direction:column;gap:0.65rem;" class="reveal">
+      <div class="glass-card" style="display:flex;align-items:center;gap:1rem;padding:0.85rem 1.1rem;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7ee8fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0;color:#080c18;">1</div>
+        <div><div style="font-weight:600;font-size:0.83rem;margin-bottom:0.1rem;">Outreach</div><div style="font-size:0.73rem;color:rgba(255,255,255,0.5);">Targeted email + LinkedIn DM to AI safety leads, founders, compliance officers &amp; ethicists.</div></div>
+      </div>
+      <div class="glass-card" style="display:flex;align-items:center;gap:1rem;padding:0.85rem 1.1rem;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#f472b6);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0;color:#080c18;">2</div>
+        <div><div style="font-weight:600;font-size:0.83rem;margin-bottom:0.1rem;">Discovery Call</div><div style="font-size:0.73rem;color:rgba(255,255,255,0.5);">30-min conversation to understand their AI deployment, user base, and current safety posture.</div></div>
+      </div>
+      <div class="glass-card" style="display:flex;align-items:center;gap:1rem;padding:0.85rem 1.1rem;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#f472b6,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0;color:#080c18;">3</div>
+        <div><div style="font-weight:600;font-size:0.83rem;margin-bottom:0.1rem;">Scope &amp; Proposal</div><div style="font-size:0.73rem;color:rgba(255,255,255,0.5);">Tailored audit or framework licensing proposal. Starting engagements from Level I assessments.</div></div>
+      </div>
+      <div class="glass-card" style="display:flex;align-items:center;gap:1rem;padding:0.85rem 1.1rem;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#34d399,#7ee8fa);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0;color:#080c18;">4</div>
+        <div><div style="font-weight:600;font-size:0.83rem;margin-bottom:0.1rem;">Engagement &amp; Report</div><div style="font-size:0.73rem;color:rgba(255,255,255,0.5);">Deliver findings, certification, or framework &mdash; with an ongoing relationship path to L2/L3.</div></div>
+      </div>
     </div>
-    <p style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:1rem;text-align:center;" class="reveal">Ikwe is positioned as the third-party verification layer these regulations demand but cannot provide internally.</p>
   </div>
 </div>
 
-<!-- SLIDE 11: Closing -->
+<!-- SLIDE 11: Financials -->
 <div class="slide" data-slide="11">
   <div class="gradient-mesh">
-    <div class="blob-d" style="width:500px;height:500px;top:-120px;right:-90px;background:#7ee8fa;opacity:0.13;"></div>
-    <div class="blob-d" style="width:350px;height:350px;bottom:-80px;left:-60px;background:#a78bfa;opacity:0.11;"></div>
-    <div class="blob-d" style="width:200px;height:200px;top:30%;left:10%;background:#f472b6;opacity:0.08;"></div>
+    <div class="blob" style="width:370px;height:370px;top:-70px;left:-50px;background:#a78bfa;opacity:0.09;"></div>
+    <div class="blob" style="width:210px;height:210px;bottom:-45px;right:-30px;background:#f472b6;opacity:0.07;"></div>
+  </div>
+  <div class="content">
+    <div class="tag tag-purple reveal" style="margin-bottom:0.9rem;">Financials &amp; Status</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 1.25rem;" class="reveal">Pre-revenue. Infrastructure-stage. Raising now.</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.25rem;" class="reveal">
+      <div class="glass-card" style="text-align:center;padding:1.25rem 0.75rem;">
+        <div class="stat-big grad-text" style="margin-bottom:0.25rem;">Aug</div>
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);">2025 &mdash; Incorporated</div>
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.45);margin-top:0.4rem;">Visible Healing Inc.</div>
+      </div>
+      <div class="glass-card" style="text-align:center;padding:1.25rem 0.75rem;">
+        <div class="stat-big" style="background:linear-gradient(135deg,#a78bfa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.25rem;">$0</div>
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);">Current Revenue</div>
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.45);margin-top:0.4rem;">Pre-revenue stage</div>
+      </div>
+      <div class="glass-card" style="text-align:center;padding:1.25rem 0.75rem;">
+        <div class="stat-big" style="background:linear-gradient(135deg,#34d399,#7ee8fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.25rem;">0</div>
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);">Direct Competitors</div>
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.45);margin-top:0.4rem;">Category creation</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.55rem;" class="reveal">
+      <div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.1rem;">
+        <div style="font-weight:600;font-size:0.82rem;">Team compensation model</div>
+        <span class="tag tag-cyan" style="font-size:0.65rem;">Pre-revenue equity &mdash; Stephanie &amp; Shaun</span>
+      </div>
+      <div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.1rem;">
+        <div style="font-weight:600;font-size:0.82rem;">Invoicing structure</div>
+        <span class="tag tag-purple" style="font-size:0.65rem;">50% on scope / 50% on delivery</span>
+      </div>
+      <div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.1rem;">
+        <div style="font-weight:600;font-size:0.82rem;">Use of initial funding</div>
+        <span class="tag tag-pink" style="font-size:0.65rem;">CTO hire + platform infra + GTM</span>
+      </div>
+      <div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.1rem;">
+        <div style="font-weight:600;font-size:0.82rem;">Revenue target: Phase I</div>
+        <span class="tag tag-amber" style="font-size:0.65rem;">3 anchor clients by Q4 2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: Why Now -->
+<div class="slide" data-slide="12">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:420px;height:420px;top:-85px;right:-70px;background:#7ee8fa;opacity:0.11;"></div>
+    <div class="blob" style="width:250px;height:250px;bottom:-55px;left:-40px;background:#a78bfa;opacity:0.09;"></div>
+    <div class="blob" style="width:160px;height:160px;top:40%;left:8%;background:#f472b6;opacity:0.07;"></div>
+  </div>
+  <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;"></canvas>
+  <div class="content">
+    <div class="tag tag-amber reveal" style="margin-bottom:0.9rem;">Why Now</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 1.25rem;" class="reveal">The window is open &mdash; and closing</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="reveal">
+      <div class="glass-card" style="border-left:3px solid #7ee8fa;padding:1.2rem 1.4rem;">
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.35rem;color:#f0f4ff;">&#x2696;&#xFE0F; Regulatory Mandate</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.55);">EU AI Act, ISO 42001, NIST AI RMF &mdash; all require behavioral accountability with no tooling to deliver it. Ikwe fills that gap.</div>
+      </div>
+      <div class="glass-card" style="border-left:3px solid #a78bfa;padding:1.2rem 1.4rem;">
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.35rem;color:#f0f4ff;">&#x1F4C8; Category Creation</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.55);">Behavioral EQ safety doesn&rsquo;t exist as a commercial category yet. First mover advantage is still available.</div>
+      </div>
+      <div class="glass-card" style="border-left:3px solid #f472b6;padding:1.2rem 1.4rem;">
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.35rem;color:#f0f4ff;">&#x26B0;&#xFE0F; Documented Harm</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.55);">Character.AI wrongful death suit, Replika regulatory action, and FTC investigations have created enterprise urgency for third-party verification.</div>
+      </div>
+      <div class="glass-card" style="border-left:3px solid #fbbf24;padding:1.2rem 1.4rem;">
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.35rem;color:#f0f4ff;">&#x1F9EA; Research Proof</div>
+        <div style="font-size:0.74rem;color:rgba(255,255,255,0.55);">Ikwe&rsquo;s benchmark data is real, reproducible, and shows a measurable 25+ point performance gap over frontier baselines. The story holds.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13: Close -->
+<div class="slide" data-slide="13">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:520px;height:520px;top:-120px;right:-90px;background:#7ee8fa;opacity:0.13;"></div>
+    <div class="blob" style="width:360px;height:360px;bottom:-80px;left:-60px;background:#a78bfa;opacity:0.11;"></div>
+    <div class="blob" style="width:200px;height:200px;top:30%;left:8%;background:#f472b6;opacity:0.08;"></div>
   </div>
   <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1;"></canvas>
   <div class="content" style="text-align:center;">
-    <div style="font-size:3rem;margin-bottom:0.75rem;animation:float 3.5s ease-in-out infinite;display:inline-block;" class="reveal">&#x1F6E1;</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(2rem,4.5vw,3.5rem);margin:0 0 0.5rem;" class="reveal"><span style="background:linear-gradient(135deg,#7ee8fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">The behavioral safety layer</span><br/>doesn&rsquo;t exist yet.</h2>
-    <p style="color:rgba(255,255,255,0.45);font-size:0.95rem;max-width:520px;margin:0.75rem auto 2rem;" class="reveal">Ikwe.ai is building it &mdash; at the intersection of emotionally intelligent AI, independent auditing, and enterprise trust infrastructure.</p>
-    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;" class="reveal">
-      <div class="glass-card" style="text-align:center;min-width:160px;padding:1.25rem;"><div class="stat-num grad-text">2025</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;">Incorporated</div></div>
-      <div class="glass-card" style="text-align:center;min-width:160px;padding:1.25rem;"><div class="stat-num grad-text">First</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;">EQ Safety Benchmark</div></div>
-      <div class="glass-card" style="text-align:center;min-width:160px;padding:1.25rem;"><div class="stat-num grad-text">0</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;">Direct Competitors</div></div>
+    <div style="font-size:2.8rem;margin-bottom:0.6rem;animation:float 3.5s ease-in-out infinite;display:inline-block;" class="reveal">&#x1F6E1;</div>
+    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,4vw,3.2rem);margin:0 0 0.4rem;line-height:1.15;" class="reveal"><span style="background:linear-gradient(135deg,#7ee8fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">The behavioral safety layer</span><br/>doesn&rsquo;t exist yet.</h2>
+    <p style="color:rgba(255,255,255,0.45);font-size:0.9rem;max-width:500px;margin:0.6rem auto 1.75rem;line-height:1.6;" class="reveal">Ikwe.ai is building it &mdash; at the intersection of emotionally intelligent AI, independent auditing, and enterprise trust infrastructure.</p>
+    <div class="reveal" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1rem 1.5rem;max-width:520px;margin:0 auto 1.5rem;">
+      <p style="font-family:'Instrument Serif',serif;font-style:italic;font-size:0.95rem;color:rgba(255,255,255,0.7);margin:0;">&ldquo;Technology should help humans become more understood, more safe, and more capable.&rdquo;</p>
+      <p style="font-size:0.68rem;color:rgba(255,255,255,0.28);margin:0.4rem 0 0;">&mdash; Ikwe.ai founding principle</p>
     </div>
-    <p style="margin-top:2rem;font-size:0.78rem;color:rgba(255,255,255,0.3);letter-spacing:0.05em;" class="reveal">ikwe.ai &nbsp;&middot;&nbsp; Stephanie Stranko, Founder &nbsp;&middot;&nbsp; Visible Healing Inc.</p>
-  </div>
-</div>
-
-<!-- SLIDE 12: References & Citations -->
-<div class="slide" data-slide="12">
-  <div class="gradient-mesh">
-    <div class="blob-d" style="width:350px;height:350px;top:-80px;right:-50px;background:#a78bfa;opacity:0.08;"></div>
-    <div class="blob-d" style="width:200px;height:200px;bottom:-40px;left:-30px;background:#7ee8fa;opacity:0.06;"></div>
-  </div>
-  <div class="content">
-    <div class="tag tag-cyan reveal" style="margin-bottom:0.75rem;">References &amp; Citations</div>
-    <h2 style="font-family:'Instrument Serif',serif;font-size:clamp(1.4rem,2.5vw,1.9rem);margin:0 0 1rem;" class="reveal">All claims sourced &amp; verifiable</h2>
-    <div class="cite-cols reveal">
-      <div>
-        <div class="cite-row">
-          <div class="cite-num">1</div>
-          <div class="cite-body">
-            <div class="cite-title">Character.AI Wrongful Death Lawsuit &amp; FTC Investigation (2024)</div>
-            <div class="cite-meta">Reuters / The Verge &middot; Oct&ndash;Dec 2024</div>
-            <a class="cite-link" href="https://www.reuters.com/technology/character-ai-faces-lawsuit-over-teen-suicide-florida-2024-10-23/" target="_blank" rel="noopener">reuters.com &rarr; Character AI teen suicide lawsuit</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">2</div>
-          <div class="cite-body">
-            <div class="cite-title">Replika — Italy Data Regulator Ban &amp; User Harm Reports (2023)</div>
-            <div class="cite-meta">Garante (Italian DPA) &middot; Feb 2023</div>
-            <a class="cite-link" href="https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9852506" target="_blank" rel="noopener">garanteprivacy.it &rarr; Replika ban order</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">3</div>
-          <div class="cite-body">
-            <div class="cite-title">Character.AI Congressional Hearing on Teen Safety (2024)</div>
-            <div class="cite-meta">U.S. Senate Judiciary Committee &middot; Dec 2024</div>
-            <a class="cite-link" href="https://www.judiciary.senate.gov/committee-activity/hearings/oversight-of-ai-examining-harms-to-children" target="_blank" rel="noopener">judiciary.senate.gov &rarr; AI Harms to Children hearing</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">4</div>
-          <div class="cite-body">
-            <div class="cite-title">HumaneBench: Benchmarking LLMs for Humane Interaction (2024)</div>
-            <div class="cite-meta">arXiv preprint &middot; 2024</div>
-            <a class="cite-link" href="https://arxiv.org/abs/2409.00551" target="_blank" rel="noopener">arxiv.org/abs/2409.00551</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">5</div>
-          <div class="cite-body">
-            <div class="cite-title">Purdue Study: 20%+ Safety Benchmark Errors in LLM Evaluations (2024)</div>
-            <div class="cite-meta">Purdue University / arXiv &middot; 2024</div>
-            <a class="cite-link" href="https://arxiv.org/abs/2406.12975" target="_blank" rel="noopener">arxiv.org/abs/2406.12975</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">6</div>
-          <div class="cite-body">
-            <div class="cite-title">WOPR Act — Wellness of Online Participants and Robots Act</div>
-            <div class="cite-meta">U.S. Senate / Congress.gov &middot; 2024</div>
-            <a class="cite-link" href="https://www.congress.gov/bill/118th-congress/senate-bill/4753" target="_blank" rel="noopener">congress.gov &rarr; S.4753 WOPR Act</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">7</div>
-          <div class="cite-body">
-            <div class="cite-title">EU AI Act — Full Text, Article 9 (Risk Management Systems)</div>
-            <div class="cite-meta">European Parliament &middot; Official Journal 2024/1689 &middot; Aug 2024</div>
-            <a class="cite-link" href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689" target="_blank" rel="noopener">eur-lex.europa.eu &rarr; EU AI Act</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">8</div>
-          <div class="cite-body">
-            <div class="cite-title">NIST AI Risk Management Framework 1.0 (AI RMF)</div>
-            <div class="cite-meta">NIST &middot; Jan 2023</div>
-            <a class="cite-link" href="https://airc.nist.gov/RMF" target="_blank" rel="noopener">airc.nist.gov &rarr; NIST AI RMF</a>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="cite-row">
-          <div class="cite-num">9</div>
-          <div class="cite-body">
-            <div class="cite-title">ISO/IEC 42001:2023 — Artificial Intelligence Management System</div>
-            <div class="cite-meta">ISO &middot; Dec 2023</div>
-            <a class="cite-link" href="https://www.iso.org/standard/81230.html" target="_blank" rel="noopener">iso.org &rarr; ISO 42001</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">10</div>
-          <div class="cite-body">
-            <div class="cite-title">AI Safety &amp; Governance Market Size — $6.9B (2024) to $50B+ (2030)</div>
-            <div class="cite-meta">MarketsandMarkets Research &middot; 2024</div>
-            <a class="cite-link" href="https://www.marketsandmarkets.com/Market-Reports/ai-governance-market-138940241.html" target="_blank" rel="noopener">marketsandmarkets.com &rarr; AI Governance Market</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">11</div>
-          <div class="cite-body">
-            <div class="cite-title">Conversational AI Market — $32.4B (2025)</div>
-            <div class="cite-meta">Grand View Research &middot; 2025</div>
-            <a class="cite-link" href="https://www.grandviewresearch.com/industry-analysis/conversational-ai-market" target="_blank" rel="noopener">grandviewresearch.com &rarr; Conversational AI Market</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">12</div>
-          <div class="cite-body">
-            <div class="cite-title">Emotion AI / Affective Computing Market — $13.8B (2025)</div>
-            <div class="cite-meta">Grand View Research &middot; 2025</div>
-            <a class="cite-link" href="https://www.grandviewresearch.com/industry-analysis/emotion-detection-and-recognition-market" target="_blank" rel="noopener">grandviewresearch.com &rarr; Emotion Detection Market</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">13</div>
-          <div class="cite-body">
-            <div class="cite-title">DarkBench: Benchmarking Dark Patterns in LLMs (2024)</div>
-            <div class="cite-meta">arXiv preprint &middot; 2024</div>
-            <a class="cite-link" href="https://arxiv.org/abs/2405.03811" target="_blank" rel="noopener">arxiv.org/abs/2405.03811</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">14</div>
-          <div class="cite-body">
-            <div class="cite-title">TrustLLM: Trustworthiness in Large Language Models (2024)</div>
-            <div class="cite-meta">arXiv &middot; Jan 2024</div>
-            <a class="cite-link" href="https://arxiv.org/abs/2401.05561" target="_blank" rel="noopener">arxiv.org/abs/2401.05561</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">15</div>
-          <div class="cite-body">
-            <div class="cite-title">VERA-MH: Validation &amp; Evaluation Framework for Mental Health AI</div>
-            <div class="cite-meta">ECRI / Journal of Medical Internet Research &middot; 2023</div>
-            <a class="cite-link" href="https://www.jmir.org/2023/1/e45872" target="_blank" rel="noopener">jmir.org &rarr; VERA-MH framework</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">16</div>
-          <div class="cite-body">
-            <div class="cite-title">Stanford AIR-Bench: AI Safety &amp; Risk Benchmark</div>
-            <div class="cite-meta">Stanford CRFM &middot; 2024</div>
-            <a class="cite-link" href="https://crfm.stanford.edu/helm/air-bench/latest/" target="_blank" rel="noopener">crfm.stanford.edu &rarr; AIR-Bench</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">17</div>
-          <div class="cite-body">
-            <div class="cite-title">Credo AI — Enterprise AI Governance Platform</div>
-            <div class="cite-meta">Credo AI &middot; 2024</div>
-            <a class="cite-link" href="https://www.credo.ai" target="_blank" rel="noopener">credo.ai</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">18</div>
-          <div class="cite-body">
-            <div class="cite-title">Holistic AI — AI Risk Management &amp; Compliance</div>
-            <div class="cite-meta">Holistic AI &middot; 2024</div>
-            <a class="cite-link" href="https://www.holisticai.com" target="_blank" rel="noopener">holisticai.com</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">19</div>
-          <div class="cite-body">
-            <div class="cite-title">Mindgard — AI Security &amp; Red Teaming Platform</div>
-            <div class="cite-meta">Mindgard &middot; 2024</div>
-            <a class="cite-link" href="https://mindgard.ai" target="_blank" rel="noopener">mindgard.ai</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">20</div>
-          <div class="cite-body">
-            <div class="cite-title">Woebot &amp; Wysa — Mental Health Conversational AI</div>
-            <div class="cite-meta">Woebot Health / Wysa &middot; 2024</div>
-            <a class="cite-link" href="https://woebothealth.com" target="_blank" rel="noopener">woebothealth.com</a> &nbsp;&middot;&nbsp; <a class="cite-link" href="https://www.wysa.com" target="_blank" rel="noopener">wysa.com</a>
-          </div>
-        </div>
-        <div class="cite-row">
-          <div class="cite-num">21</div>
-          <div class="cite-body">
-            <div class="cite-title">Anthropic Constitutional AI &amp; Safety Research</div>
-            <div class="cite-meta">Anthropic &middot; 2022&ndash;2024</div>
-            <a class="cite-link" href="https://www.anthropic.com/research" target="_blank" rel="noopener">anthropic.com/research</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p style="font-size:0.65rem;color:rgba(255,255,255,0.25);margin-top:0.75rem;text-align:center;" class="reveal">All citations are publicly verifiable. Superscripts throughout the deck link to corresponding reference numbers above.</p>
+    <p style="font-size:0.75rem;color:rgba(255,255,255,0.28);letter-spacing:0.06em;" class="reveal">ikwe.ai &nbsp;&middot;&nbsp; Stephanie Stranko, Founder &amp; CEO &nbsp;&middot;&nbsp; Visible Healing Inc.</p>
   </div>
 </div>
 
 </div><!-- end .deck -->
 
-<div class="nav-controls" id="nav">
+<div class="nav-controls">
   <button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button>
   <div class="slide-dots" id="dots"></div>
   <button class="nav-btn" onclick="changeSlide(1)">&#8250;</button>
-  <span class="slide-counter" id="counter">1 / 12</span>
+  <span class="slide-counter" id="counter">1 / 13</span>
 </div>
-</div><!-- end #deck-wrapper -->
 
 <script>
-const CORRECT = 'lady';
-function tryUnlock() {
-  const val = document.getElementById('pw-input').value.trim().toLowerCase();
-  if (val === CORRECT) {
-    document.getElementById('lock-screen').style.display = 'none';
-    document.getElementById('deck-wrapper').style.display = 'block';
-    try { animateSlide(document.querySelector('.slide.active')); } catch(e) {}
-    setupParticles();
-  } else {
-    const inp = document.getElementById('pw-input');
-    const err = document.getElementById('pw-error');
-    inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
-    err.textContent = 'Incorrect access code.';
-    setTimeout(() => { err.textContent = '\u00a0'; }, 2500);
+  let current = 1;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const dotsEl = document.getElementById('dots');
+  const counterEl = document.getElementById('counter');
+  for (let i = 1; i <= total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.onclick = () => goToSlide(i);
+    dotsEl.appendChild(d);
   }
-}
-document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
-
-let current = 1;
-const total = 12;
-const dotsEl = document.getElementById('dots');
-const counterEl = document.getElementById('counter');
-for (let i = 1; i <= total; i++) {
-  const d = document.createElement('div');
-  d.className = 'dot' + (i === 1 ? ' active' : '');
-  d.onclick = () => goToSlide(i);
-  dotsEl.appendChild(d);
-}
-function goToSlide(n) {
-  const prev = document.querySelector('.slide.active');
-  const next = document.querySelector('.slide[data-slide="' + n + '"]');
-  if (prev) prev.classList.remove('active');
-  if (next) { next.classList.add('active'); animateSlide(next); }
-  current = n; updateNav();
-}
-function changeSlide(dir) { let n = current + dir; if (n < 1) n = total; if (n > total) n = 1; goToSlide(n); }
-function updateNav() {
-  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === current));
-  counterEl.textContent = current + ' / ' + total;
-}
-document.addEventListener('keydown', e => {
-  if (document.getElementById('lock-screen').style.display === 'none') {
+  function goToSlide(n) {
+    const prev = document.querySelector('.slide.active');
+    const next = document.querySelector('.slide[data-slide="' + n + '"]');
+    if (prev) prev.classList.remove('active');
+    if (next) { next.classList.add('active'); animateSlide(next); }
+    current = n; updateNav();
+  }
+  function changeSlide(dir) { let n = current + dir; if (n < 1) n = total; if (n > total) n = 1; goToSlide(n); }
+  function updateNav() {
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === current));
+    counterEl.textContent = current + ' / ' + total;
+  }
+  document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
-  }
-});
-let touchX = 0;
-document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
-document.addEventListener('touchend', e => { const d = touchX - e.changedTouches[0].clientX; if (Math.abs(d) > 50) changeSlide(d > 0 ? 1 : -1); });
-
-function animateSlide(slide) {
-  slide.querySelectorAll('.reveal').forEach((el, i) => {
-    el.style.transition = 'none'; el.style.opacity = '0'; el.style.transform = 'translateY(18px)';
-    el.offsetHeight;
-    const delay = i * 0.07;
-    el.style.transition = 'opacity 0.35s ease ' + delay + 's, transform 0.35s ease ' + delay + 's';
-    el.style.opacity = '1'; el.style.transform = 'translateY(0)';
   });
-  slide.querySelectorAll('.bar-fill:not(.filled)').forEach((bar, i) => {
-    bar.classList.add('filled'); bar.style.width = '0';
-    bar.style.transition = 'width 0.6s ease ' + (i * 0.1) + 's';
-    bar.offsetHeight; bar.style.width = bar.dataset.width + '%';
-  });
-}
+  let touchX = 0;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => { const d = touchX - e.changedTouches[0].clientX; if (Math.abs(d) > 50) changeSlide(d > 0 ? 1 : -1); });
 
-function initParticles(canvas, opts) {
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
-  const count = opts.count || 40;
-  const interactive = opts.interactive !== false;
-  let mx = -1000, my = -1000;
-  const parts = Array.from({length: count}, () => ({
-    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-    size: Math.random() * 2 + 0.6, alpha: Math.random() * 0.3 + 0.08
-  }));
-  if (interactive) {
-    canvas.addEventListener('mousemove', e => { const r = canvas.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
-    canvas.addEventListener('mouseleave', () => { mx = -1000; my = -1000; });
-  }
-  (function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    parts.forEach(p => {
-      if (interactive) {
-        const dx = p.x - mx, dy = p.y - my, dist = Math.sqrt(dx*dx+dy*dy);
-        if (dist < 100) { const f = (100-dist)/100*1.5; p.vx += (dx/dist)*f*0.08; p.vy += (dy/dist)*f*0.08; }
-      }
-      p.vx *= 0.98; p.vy *= 0.98; p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
-      if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(126,232,250,' + p.alpha + ')'; ctx.fill();
+  function animateSlide(slide) {
+    slide.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(18px)';
+      el.offsetHeight;
+      const delay = i * 0.08;
+      el.style.transition = `opacity 0.35s ease ${delay}s, transform 0.35s ease ${delay}s`;
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
     });
-    requestAnimationFrame(animate);
+    slide.querySelectorAll('.bar-fill:not(.fill-init)').forEach((bar, i) => {
+      bar.classList.add('fill-init');
+      bar.style.width = '0%';
+      bar.style.transition = `width 0.6s ease ${i * 0.1 + 0.2}s`;
+      bar.offsetHeight;
+      bar.style.width = (bar.dataset.width || '0') + '%';
+    });
+  }
+
+  document.addEventListener('mousemove', e => {
+    const s = document.querySelector('.mouse-spotlight');
+    if (s) s.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(126,232,250,0.05), transparent 40%)`;
+  });
+
+  (function parallax() {
+    let mx = innerWidth/2, my = innerHeight/2;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function tick() {
+      const ox = (mx - innerWidth/2) / (innerWidth/2), oy = (my - innerHeight/2) / (innerHeight/2);
+      document.querySelectorAll('.deco-shape').forEach(s => {
+        const sp = parseFloat(s.dataset.speed) || 0.03;
+        s.style.transform = `translate(${ox*sp*100}px,${oy*sp*100}px)`;
+      });
+      requestAnimationFrame(tick);
+    })();
   })();
-}
 
-function setupParticles() {
-  document.querySelectorAll('.particle-canvas').forEach(c => initParticles(c, {interactive: true, count: 50}));
-  document.querySelectorAll('.particle-canvas-ambient').forEach(c => initParticles(c, {interactive: false, count: 18}));
-}
+  window.initParticles = function(canvas, opts) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+    const interactive = opts.interactive !== false;
+    const count = opts.count || (interactive ? 55 : 18);
+    let mx = -1000, my = -1000;
+    const particles = Array.from({length: count}, () => ({
+      x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+      vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3,
+      size: Math.random()*2.5+.8, alpha: Math.random()*.35+.1
+    }));
+    if (interactive) {
+      canvas.addEventListener('mousemove', e => { const r=canvas.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; });
+      canvas.addEventListener('mouseleave', () => { mx=-1000; my=-1000; });
+    }
+    (function animate() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p => {
+        if (interactive) { const dx=p.x-mx,dy=p.y-my,dist=Math.sqrt(dx*dx+dy*dy); if (dist<120){const f=(120-dist)/120*2; p.vx+=(dx/dist)*f*.1; p.vy+=(dy/dist)*f*.1;} }
+        p.vx*=.98; p.vy*=.98; p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0)p.x=canvas.width; if(p.x>canvas.width)p.x=0;
+        if(p.y<0)p.y=canvas.height; if(p.y>canvas.height)p.y=0;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fillStyle=`rgba(126,232,250,${p.alpha})`; ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    })();
+  };
+  document.querySelectorAll('.particle-canvas').forEach(c => window.initParticles(c,{interactive:true,count:55}));
+  document.querySelectorAll('.particle-canvas-ambient').forEach(c => window.initParticles(c,{interactive:false,count:18}));
 
-document.addEventListener('mousemove', e => {
-  const s = document.querySelector('.mouse-spotlight');
-  if (s) s.style.background = 'radial-gradient(600px circle at ' + e.clientX + 'px ' + e.clientY + 'px, rgba(126,232,250,0.05), transparent 40%)';
-});
+  try { animateSlide(document.querySelector('.slide.active')); } catch(e) {}
 </script>
 </body>
 </html>
